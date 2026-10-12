@@ -1,0 +1,15 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor folders
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs and scratch files
+*.log
+scratch/
+test_*.js

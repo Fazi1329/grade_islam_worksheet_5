@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quran Quest: The Three Surahs Challenge | Grade 5 Islamic Studies</title>
+  <meta name="description" content="An interactive, colourful Islamic educational game and quiz covering Surah Az-Zalzalah, Surah Al-Qadr, and Surah At-Tin from the Grade 5 Islamic Studies curriculum.">
+  
+  <!-- Google Fonts: Outfit (modern, kid-friendly) and Amiri (authentic Arabic typography) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas for celebration confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Islamic Geometric Background Motifs -->
+  <div class="bg-pattern-overlay" aria-hidden="true"></div>
+  <div class="floating-lantern lantern-left" aria-hidden="true">
+    <svg viewBox="0 0 60 120" width="48" height="96">
+      <path d="M30 0 L30 20 M20 20 C20 15, 40 15, 40 20 L48 40 L12 40 Z" fill="none" stroke="#f59e0b" stroke-width="2"/>
+      <polygon points="12,40 48,40 42,85 18,85" fill="rgba(245, 158, 11, 0.15)" stroke="#f59e0b" stroke-width="2"/>
+      <path d="M22,40 Q30,55 38,40 M20,60 Q30,75 40,60" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+      <circle cx="30" cy="62" r="6" fill="#fef08a" opacity="0.9" filter="drop-shadow(0 0 8px #f59e0b)"/>
+      <polygon points="18,85 42,85 30,105" fill="#f59e0b"/>
+      <line x1="30" y1="105" x2="30" y2="120" stroke="#d97706" stroke-width="2"/>
+      <circle cx="30" cy="120" r="3" fill="#d97706"/>
+    </svg>
+  </div>
+  <div class="floating-lantern lantern-right" aria-hidden="true">
+    <svg viewBox="0 0 60 120" width="48" height="96">
+      <path d="M30 0 L30 20 M20 20 C20 15, 40 15, 40 20 L48 40 L12 40 Z" fill="none" stroke="#0d9488" stroke-width="2"/>
+      <polygon points="12,40 48,40 42,85 18,85" fill="rgba(13, 148, 136, 0.15)" stroke="#0d9488" stroke-width="2"/>
+      <path d="M22,40 Q30,55 38,40 M20,60 Q30,75 40,60" fill="none" stroke="#2dd4bf" stroke-width="1.5"/>
+      <circle cx="30" cy="62" r="6" fill="#99f6e4" opacity="0.9" filter="drop-shadow(0 0 8px #0d9488)"/>
+      <polygon points="18,85 42,85 30,105" fill="#0d9488"/>
+      <line x1="30" y1="105" x2="30" y2="120" stroke="#0f766e" stroke-width="2"/>
+      <circle cx="30" cy="120" r="3" fill="#0f766e"/>
+    </svg>
+  </div>
+
+  <div class="app-wrapper">
+    <!-- Top Persistent Navigation Bar -->
+    <header class="app-header" id="app-header">
+      <div class="header-content">
+        <div class="logo-group" id="header-logo" role="button" tabindex="0" title="Return to Quest Home">
+          <span class="logo-icon">۞</span>
+          <div class="logo-text">
+            <span class="logo-title">Quran Quest</span>
+            <span class="logo-sub">Grade 5 Challenge</span>
+          </div>
+        </div>
+
+        <div class="header-stats-group" id="header-stats" style="display: none;">
+          <div class="stat-pill level-pill" id="header-level-badge">
+            <span class="stat-icon" id="stat-level-icon">⚡</span>
+            <span id="stat-level-text">Level 1</span>
+          </div>
+          <div class="stat-pill score-pill">
+            <span class="stat-icon">⭐</span>
+            <span id="header-score-text">0 pts</span>
+          </div>
+          <div class="stat-pill student-pill" id="header-student-tag">
+            <span class="avatar-mini" id="header-student-avatar">🌟</span>
+            <span id="header-student-name">Scholar</span>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <button class="icon-btn" id="audio-toggle-btn" title="Toggle Sound Effects" aria-label="Toggle Sound">
+            <span id="audio-icon">🔊</span>
+          </button>
+          <button class="icon-btn" id="roadmap-btn" title="View Surah Roadmap" style="display: none;" aria-label="Roadmap">
+            <span>🗺️</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Level Progress Bar (Shown in active quiz) -->
+      <div class="header-progress-container" id="header-progress-bar" style="display: none;">
+        <div class="progress-info-row">
+          <span class="progress-step-text" id="progress-step-label">Question 1 of 9</span>
+          <span class="progress-percent-text" id="progress-percent-label">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main" id="app-main">
+      <!-- SCREEN 1: WELCOME / INTRO SCREEN -->
+      <section class="screen-view active-view" id="welcome-screen">
+        <div class="welcome-hero-card">
+          <div class="bismillah-banner">
+            <span class="bismillah-text">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
+            <span class="bismillah-trans">In the Name of Allah, Most Kind, Most Merciful</span>
+          </div>
+
+          <div class="title-emblem">
+            <span class="emblem-star">۞</span>
+            <span class="emblem-crescent">🌙</span>
+            <span class="emblem-star">۞</span>
+          </div>
+
+          <h1 class="quest-main-title">Quran Quest</h1>
+          <p class="quest-subtitle">The Three Surahs Challenge!</p>
+          <p class="quest-description">
+            Step into an interactive journey through your Grade 5 Islamic Studies textbook! 
+            Explore the powerful events of <strong>Surah Az-Zalzalah</strong>, the supreme peace of <strong>Surah Al-Qadr</strong>, 
+            and the divine oaths of <strong>Surah At-Tin</strong>.
+          </p>
+
+          <!-- Student Profile Registration -->
+          <div class="student-setup-card">
+            <h2 class="setup-heading">Enter Your Explorer Profile</h2>
+            <div class="form-group">
+              <label for="student-name-input">Your Full Name:</label>
+              <input type="text" id="student-name-input" placeholder="e.g., Zayd, Maryam, Omar..." maxlength="40" autocomplete="off" />
+            </div>
+
+            <div class="avatar-selection-group">
+              <label>Choose Your Quest Badge:</label>
+              <div class="avatar-options" id="avatar-picker">
+                <button type="button" class="avatar-choice active" data-avatar="🌟" title="Radiant Star">🌟</button>
+                <button type="button" class="avatar-choice" data-avatar="🌙" title="Crescent Seeker">🌙</button>
+                <button type="button" class="avatar-choice" data-avatar="📖" title="Quran Reader">📖</button>
+                <button type="button" class="avatar-choice" data-avatar="🌿" title="Tree of Faith">🌿</button>
+                <button type="button" class="avatar-choice" data-avatar="🕌" title="Mosque Explorer">🕌</button>
+                <button type="button" class="avatar-choice" data-avatar="🕊️" title="Peaceful Dove">🕊️</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Roadmap Levels Cards -->
+          <div class="roadmap-grid">
+            <div class="roadmap-card card-zalzalah" data-level="1">
+              <div class="card-badge-top">Level 1</div>
+              <div class="card-icon">⚡</div>
+              <h3 class="card-title">Surah Az-Zalzalah</h3>
+              <p class="card-arabic">سُورَةُ الزَّلْزَلَةِ</p>
+              <p class="card-desc">The Earthquake • 8 Verses • Makkah</p>
+              <div class="card-topics">
+                <span>The Great Quake</span>
+                <span>Earth's Burdens</span>
+                <span>Atom's Weight</span>
+              </div>
+            </div>
+
+            <div class="roadmap-card card-qadr" data-level="2">
+              <div class="card-badge-top">Level 2</div>
+              <div class="card-icon">🌙</div>
+              <h3 class="card-title">Surah Al-Qadr</h3>
+              <p class="card-arabic">سُورَةُ الْقَدْرِ</p>
+              <p class="card-desc">The Decree • 5 Verses • Makkah</p>
+              <div class="card-topics">
+                <span>Laylat al-Qadr</span>
+                <span>Angel Jibreel</span>
+                <span>1,000 Months</span>
+              </div>
+            </div>
+
+            <div class="roadmap-card card-tin" data-level="3">
+              <div class="card-badge-top">Level 3</div>
+              <div class="card-icon">🌿</div>
+              <h3 class="card-title">Surah At-Tin</h3>
+              <p class="card-arabic">سُورَةُ التِّينِ</p>
+              <p class="card-desc">The Fig • 8 Verses • Makkah</p>
+              <div class="card-topics">
+                <span>The 4 Oaths</span>
+                <span>Mount Sinai</span>
+                <span>Best Form</span>
+              </div>
+            </div>
+
+            <div class="roadmap-card card-master" data-level="4">
+              <div class="card-badge-top">Final Stage</div>
+              <div class="card-icon">🏆</div>
+              <h3 class="card-title">Master Quiz</h3>
+              <p class="card-arabic">التَّحَدِّي الشَّامِلُ</p>
+              <p class="card-desc">Comprehensive Test • All 3 Surahs</p>
+              <div class="card-topics">
+                <span>Distinguish Surahs</span>
+                <span>Master Vocab</span>
+                <span>Grand Certificate</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rules / Instructions Accordion -->
+          <div class="instructions-card">
+            <h3 class="inst-title">🎯 How to Play & Win:</h3>
+            <ul class="inst-list">
+              <li><strong>✍️ One-Word Answers:</strong> Type concise answers or vocabulary meanings taken directly from the book.</li>
+              <li><strong>🧩 Drag-and-Drop & Tap-to-Match:</strong> Drag cards into place, or tap one card and tap its match on mobile/tablets!</li>
+              <li><strong>📝 Fill in the Blanks:</strong> Complete textbook sentences by typing or selecting from the word bank.</li>
+              <li><strong>💡 Need a Clue?</strong> Click the friendly Hint button for a helpful nudge from the textbook.</li>
+              <li><strong>🎓 Master Certificate:</strong> Score 75% or higher to earn an official Quran Quest Champion certificate!</li>
+            </ul>
+          </div>
+
+          <!-- Start Button -->
+          <div class="start-action-row">
+            <button class="primary-btn glow-btn" id="start-quest-btn">
+              <span class="btn-icon">🚀</span>
+              <span class="btn-text">Begin Quran Quest!</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: LEVEL INTRO MODAL SCREEN -->
+      <section class="screen-view" id="level-intro-screen">
+        <div class="level-intro-card" id="level-intro-card">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- SCREEN 3: ACTIVE QUESTION SCREEN -->
+      <section class="screen-view" id="question-screen">
+        <div class="question-container" id="question-container">
+          <!-- Populated dynamically by renderer -->
+        </div>
+      </section>
+
+      <!-- SCREEN 4: LEVEL RECAP MODAL SCREEN -->
+      <section class="screen-view" id="level-recap-screen">
+        <div class="level-recap-card" id="level-recap-card">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- SCREEN 5: GRAND MASTER RESULTS SCREEN -->
+      <section class="screen-view" id="final-results-screen">
+        <div class="final-results-card" id="final-results-card">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p>Curriculum Reference: Grade 5 Islamic Studies Textbook (Darussalam) • Chapters 4, 5 & 6</p>
+        <p class="footer-sub">Dedicated to making Quranic learning inspiring, enjoyable, and accurate for young minds.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- POPUP MODALS: HINT, REVIEW, CERTIFICATE -->
+  <!-- 1. Hint Modal -->
+  <div class="modal-backdrop" id="hint-modal" aria-hidden="true">
+    <div class="modal-box hint-modal-box">
+      <div class="modal-header">
+        <span class="modal-icon">💡</span>
+        <h3 class="modal-title">Teacher's Clue</h3>
+        <button class="modal-close-btn" id="close-hint-btn" aria-label="Close Hint">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="hint-text" id="hint-modal-text">Here is your clue...</p>
+        <div class="book-cite" id="hint-book-ref">Chapter Reference</div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" id="got-it-hint-btn">I'm Ready!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Certificate Modal (Printable) -->
+  <div class="modal-backdrop" id="certificate-modal" aria-hidden="true">
+    <div class="modal-box cert-modal-box">
+      <div class="modal-header no-print">
+        <h3 class="modal-title">Your Official Achievement Certificate</h3>
+        <button class="modal-close-btn" id="close-cert-btn" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body certificate-print-area" id="certificate-content">
+        <div class="cert-border-outer">
+          <div class="cert-border-inner">
+            <!-- Decorative Corners -->
+            <div class="cert-corner corner-tl">۞</div>
+            <div class="cert-corner corner-tr">۞</div>
+            <div class="cert-corner corner-bl">۞</div>
+            <div class="cert-corner corner-br">۞</div>
+
+            <div class="cert-header">
+              <div class="cert-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+              <h2 class="cert-main-title">CERTIFICATE OF ACHIEVEMENT</h2>
+              <p class="cert-sub">Quran Quest: The Three Surahs Challenge</p>
+              <div class="cert-divider">✦ ۞ ✦</div>
+            </div>
+
+            <div class="cert-body">
+              <p class="cert-declare">This is proudly presented to</p>
+              <h1 class="cert-student-name" id="cert-student-name">Scholar Name</h1>
+              <p class="cert-achievement-text" id="cert-achievement-text">
+                For outstanding dedication, knowledge, and excellence in mastering the vocabulary, verses, and meanings of 
+                <strong>Surah Az-Zalzalah</strong>, <strong>Surah Al-Qadr</strong>, and <strong>Surah At-Tin</strong> 
+                from the Grade 5 Islamic Studies curriculum.
+              </p>
+
+              <div class="cert-badge-row">
+                <div class="cert-badge-item">
+                  <span class="cert-badge-icon">⚡</span>
+                  <span class="cert-badge-label">Az-Zalzalah</span>
+                </div>
+                <div class="cert-badge-item">
+                  <span class="cert-badge-icon">🌙</span>
+                  <span class="cert-badge-label">Al-Qadr</span>
+                </div>
+                <div class="cert-badge-item">
+                  <span class="cert-badge-icon">🌿</span>
+                  <span class="cert-badge-label">At-Tin</span>
+                </div>
+                <div class="cert-badge-item">
+                  <span class="cert-badge-icon">🏆</span>
+                  <span class="cert-badge-label">Master Quiz</span>
+                </div>
+              </div>
+
+              <div class="cert-score-summary">
+                <div class="cert-score-badge" id="cert-score-badge">Final Score: 95% • Quran Quest Champion</div>
+              </div>
+            </div>
+
+            <div class="cert-footer">
+              <div class="cert-sig-box">
+                <div class="sig-line"></div>
+                <span class="sig-label">Date Completed: <strong id="cert-date-text">October 2026</strong></span>
+              </div>
+              <div class="cert-seal">
+                <div class="seal-inner">
+                  <span class="seal-star">★</span>
+                  <span class="seal-text">EXCELLENCE</span>
+                  <span class="seal-sub">QURAN QUEST</span>
+                </div>
+              </div>
+              <div class="cert-sig-box">
+                <div class="sig-line"></div>
+                <span class="sig-label">Islamic Studies Department</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer no-print">
+        <button class="primary-btn" id="print-cert-btn">🖨️ Print / Save as PDF</button>
+        <button class="secondary-btn" id="dismiss-cert-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Review Answers Modal -->
+  <div class="modal-backdrop" id="review-modal" aria-hidden="true">
+    <div class="modal-box review-modal-box">
+      <div class="modal-header">
+        <div class="review-title-group">
+          <span class="modal-icon">📋</span>
+          <h3 class="modal-title">Comprehensive Answer Review</h3>
+        </div>
+        <button class="modal-close-btn" id="close-review-btn" aria-label="Close">&times;</button>
+      </div>
+      <div class="review-filter-bar">
+        <button class="filter-tab active" data-filter="all">All Questions (<span id="count-all">0</span>)</button>
+        <button class="filter-tab" data-filter="correct">Correct (<span id="count-correct">0</span>)</button>
+        <button class="filter-tab" data-filter="incorrect">Needs Practice (<span id="count-incorrect">0</span>)</button>
+      </div>
+      <div class="modal-body review-modal-body" id="review-list-container">
+        <!-- Dynamic Review Cards -->
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" id="dismiss-review-btn">Back to Results</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="quiz-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
